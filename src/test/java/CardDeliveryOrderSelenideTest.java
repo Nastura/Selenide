@@ -22,7 +22,7 @@ import static com.codeborne.selenide.Selenide.open;
 public class CardDeliveryOrderSelenideTest {
 
     @BeforeEach
-     public void setUp() {
+    public void setUp() {
         Configuration.headless = true;
         open("http://localhost:9999");
         $("[data-test-id='date'] input").sendKeys(Keys.CONTROL + "A");
@@ -30,10 +30,12 @@ public class CardDeliveryOrderSelenideTest {
 
     }
 
-    Data data = new Data(8, 1);
+    Data data = new Data(4, 1);
+
     public String addToDate() {
         return data.formatPlus();
     }
+
     public String subtractFromDate() { // вычесть из даты
         return data.formatMinus();
     }
