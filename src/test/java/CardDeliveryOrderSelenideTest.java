@@ -1,15 +1,12 @@
-import com.codeborne.selenide.Selectors;
-import io.github.bonigarcia.wdm.WebDriverManager;
+
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.Keys;
-
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-
-import static com.codeborne.selenide.Condition.exist;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selectors.withText;
@@ -19,18 +16,35 @@ import static com.codeborne.selenide.Selenide.open;
 
 public class CardDeliveryOrderSelenideTest {
 
-
     @BeforeEach
-    public void setUp() {
+     public void setUp() {
         open("http://localhost:9999");
         $("[data-test-id='date'] input").sendKeys(Keys.CONTROL + "A");
         $("[data-test-id='date'] input").sendKeys("DELETE");
     }
 
+
     LocalDate today = LocalDate.now();
     LocalDate newDay = today.plusDays(6);
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MM yyyy");
     String actualDay = newDay.format(formatter);
+
+
+    // >>>>>>>>>>>>ФУНКЦИОНАЛЬНАЯ ОТПРАВКА ФОРМЫ<<<<<<<<<<<<
+
+    @Test // Успешное оформление заявки
+    public void validTestData() throws InterruptedException { // правильный город
+        $("[data-test-id='city'] input").setValue("Горно-Алтайск");
+        $("[data-test-id='date'] input").setValue(actualDay);
+        $("[data-test-id='name'] input").setValue("Кин Йян");
+        $("[data-test-id='phone'] input").setValue("+79499999944");
+        $("[data-test-id='agreement']").click();
+        $(".button").click();
+        $(".notification .notification__content").shouldBe(visible, Duration.ofSeconds(15));
+        $(withText("Успешно!")).shouldBe(visible);
+        String actual = $(".notification .notification__content").getText();
+        Assertions.assertEquals("Встреча успешно забронирована на 12.11.2024", actual);
+    }
 
     // >>>>>>>>>>>>ПОЛЕ ДЛЯ ВВОДА ГОРОДА<<<<<<<<<<<<
 
@@ -44,9 +58,9 @@ public class CardDeliveryOrderSelenideTest {
         $(".button").click();
         $(".notification .notification__content").shouldBe(visible, Duration.ofSeconds(15));
         $(withText("Успешно!")).shouldBe(visible);
-//        $(byText("Встреча успешно забронирована на 11.11.2024")).shouldBe(visible);
+//        $(byText("Встреча успешно забронирована на 12.11.2024")).shouldBe(visible);
         String actual = $(".notification .notification__content").getText();
-        Assertions.assertEquals("Встреча успешно забронирована на 11.11.2024", actual);
+        Assertions.assertEquals("Встреча успешно забронирована на 12.11.2024", actual);
     }
 
     @Test  // НЕ один из административных центров - Калмыкия
@@ -86,7 +100,7 @@ public class CardDeliveryOrderSelenideTest {
         $(".notification .notification__content").shouldBe(visible, Duration.ofSeconds(15));
         $(withText("Успешно!")).shouldBe(visible);
         String actual = $(".notification .notification__content").getText();
-        Assertions.assertEquals("Встреча успешно забронирована на 11.11.2024", actual);
+        Assertions.assertEquals("Встреча успешно забронирована на 12.11.2024", actual);
     }
 
     @Test // Буква ё в городе
@@ -100,7 +114,7 @@ public class CardDeliveryOrderSelenideTest {
         $(".notification .notification__content").shouldBe(visible, Duration.ofSeconds(15));
         $(withText("Успешно!")).shouldBe(visible);
         String actual = $(".notification .notification__content").getText();
-        Assertions.assertEquals("Встреча успешно забронирована на 11.11.2024", actual);
+        Assertions.assertEquals("Встреча успешно забронирована на 12.11.2024", actual);
     }
 
     @Test // Город содержаший пробел в названии Нижний Новгород
@@ -114,7 +128,7 @@ public class CardDeliveryOrderSelenideTest {
         $(".notification .notification__content").shouldBe(visible, Duration.ofSeconds(15));
         $(withText("Успешно!")).shouldBe(visible);
         String actual = $(".notification .notification__content").getText();
-        Assertions.assertEquals("Встреча успешно забронирована на 11.11.2024", actual);
+        Assertions.assertEquals("Встреча успешно забронирована на 12.11.2024", actual);
     }
 
     @Test // Не заполненное поле городом
@@ -170,7 +184,7 @@ public class CardDeliveryOrderSelenideTest {
         $(".notification .notification__content").shouldBe(visible, Duration.ofSeconds(15));
         $(withText("Успешно!")).shouldBe(visible);
         String actual = $(".notification .notification__content").getText();
-        Assertions.assertEquals("Встреча успешно забронирована на 11.11.2024", actual);
+        Assertions.assertEquals("Встреча успешно забронирована на 12.11.2024", actual);
     }
 
     @Test // Фамилия содержащая в себе дефиса
@@ -314,6 +328,6 @@ public class CardDeliveryOrderSelenideTest {
         $(".notification .notification__content").shouldBe(visible, Duration.ofSeconds(10));
         $(withText("Успешно!")).shouldBe(visible);
         String actual = $(".notification .notification__content").getText();
-        Assertions.assertEquals("Встреча успешно забронирована на 11.11.2024", actual);
+        Assertions.assertEquals("Встреча успешно забронирована на 12.11.2024", actual);
     }
 }
