@@ -29,21 +29,20 @@ public class CardDeliveryOrderSelenideTest {
         $("[data-test-id='date'] input").sendKeys("DELETE");
 
     }
-
-    Data data = new Data();
-    LocalDate today = LocalDate.now();
-
-    public String addToDate() {
-        return data.formatPlus(5);
-    }
-
+   LocalDate today = LocalDate.now();
+   public String formatPlus(long day) {
+        LocalDate today = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+        LocalDate newDay = today.plusDays(day);
+        return newDay.format(formatter);
+        } 
 
     // >>>>>>>>>>>>ФУНКЦИОНАЛЬНАЯ ОТПРАВКА ФОРМЫ<<<<<<<<<<<<
 
     @Test // Успешное оформление заявки
     public void validTestData() throws InterruptedException { // правильный город
         $("[data-test-id='city'] input").setValue("Горно-Алтайск");
-        $("[data-test-id='date'] input").setValue(addToDate());
+        $("[data-test-id='date'] input").setValue(formatPlus(4));
         $("[data-test-id='name'] input").setValue("Кин Йян");
         $("[data-test-id='phone'] input").setValue("+79499999944");
         $("[data-test-id='agreement']").click();
@@ -57,19 +56,19 @@ public class CardDeliveryOrderSelenideTest {
     @Test // Один из административных центров субъектов РФ. - Кемерово
     public void theRightCity() throws InterruptedException { // правильный город
         $("[data-test-id='city'] input").setValue("Кемерово");
-        $("[data-test-id='date'] input").setValue(addToDate());
+        $("[data-test-id='date'] input").setValue(formatPlus(4));
         $("[data-test-id='name'] input").setValue("Кин Йян");
         $("[data-test-id='phone'] input").setValue("+79499999944");
         $("[data-test-id='agreement']").click();
         $(".button").click();
-        $(".notification .notification__content").shouldBe(visible, Duration.ofSeconds(15)).shouldBe(exactText("Встреча успешно забронирована на " + addToDate()));
+        $(".notification .notification__content").shouldBe(visible, Duration.ofSeconds(15)).shouldBe(exactText("Встреча успешно забронирована на " + formatPlus(4)));
         $(withText("Успешно!")).shouldBe(visible);
     }
 
     @Test  // НЕ один из административных центров - Калмыкия
     public void wrongСity() throws InterruptedException { //не правильный город
         $("[data-test-id='city'] input").setValue("Калмыкия");
-        $("[data-test-id='date'] input").setValue(addToDate());
+        $("[data-test-id='date'] input").setValue(formatPlus(4));
         $("[data-test-id='name'] input").setValue("Кин Йян");
         $("[data-test-id='phone'] input").setValue("+79499999944");
         $("[data-test-id='agreement']").click();
@@ -80,7 +79,7 @@ public class CardDeliveryOrderSelenideTest {
     @Test //  НЕ один из административных центров, город с дефисом в названии- Карачаево-Черкесия
     public void wrongСity1() throws InterruptedException {
         $("[data-test-id='city'] input").setValue("Карачаево-Черкесия");
-        $("[data-test-id='date'] input").setValue(addToDate());
+        $("[data-test-id='date'] input").setValue(formatPlus(4));
         $("[data-test-id='name'] input").setValue("Кин Йян");
         $("[data-test-id='phone'] input").setValue("+79499999944");
         $("[data-test-id='agreement']").click();
@@ -91,42 +90,42 @@ public class CardDeliveryOrderSelenideTest {
     @Test  // Буква й в центре Горно-Алтайск
     public void letterTh() throws InterruptedException {
         $("[data-test-id='city'] input").setValue("Горно-Алтайск");
-        $("[data-test-id='date'] input").setValue(addToDate());
+        $("[data-test-id='date'] input").setValue(formatPlus(4));
         $("[data-test-id='name'] input").setValue("Кин Йян");
         $("[data-test-id='phone'] input").setValue("+79499999944");
         $("[data-test-id='agreement']").click();
         $(".button").click();
-        $(".notification .notification__content").shouldBe(visible, Duration.ofSeconds(15)).shouldBe(exactText("Встреча успешно забронирована на " + addToDate()));
+        $(".notification .notification__content").shouldBe(visible, Duration.ofSeconds(15)).shouldBe(exactText("Встреча успешно забронирована на " + formatPlus(4)));
         $(withText("Успешно!")).shouldBe(visible);
     }
 
     @Test // Буква ё в городе
     public void letterE() throws InterruptedException {
         $("[data-test-id='city'] input").setValue("Орёл");
-        $("[data-test-id='date'] input").setValue(addToDate());
+        $("[data-test-id='date'] input").setValue(formatPlus(4));
         $("[data-test-id='name'] input").setValue("Кин Йян");
         $("[data-test-id='phone'] input").setValue("+79499999944");
         $("[data-test-id='agreement']").click();
         $(".button").click();
-        $(".notification .notification__content").shouldBe(visible, Duration.ofSeconds(15)).shouldBe(exactText("Встреча успешно забронирована на " + addToDate()));
+        $(".notification .notification__content").shouldBe(visible, Duration.ofSeconds(15)).shouldBe(exactText("Встреча успешно забронирована на " + formatPlus(4)));
         $(withText("Успешно!")).shouldBe(visible);
     }
 
     @Test // Город содержаший пробел в названии Нижний Новгород
     public void space() throws InterruptedException {
         $("[data-test-id='city'] input").setValue("Нижний Новгород");
-        $("[data-test-id='date'] input").setValue(addToDate());
+        $("[data-test-id='date'] input").setValue(formatPlus(4));
         $("[data-test-id='name'] input").setValue("Кин Йян");
         $("[data-test-id='phone'] input").setValue("+79499999944");
         $("[data-test-id='agreement']").click();
         $(".button").click();
-        $(".notification .notification__content").shouldBe(visible, Duration.ofSeconds(15)).shouldBe(exactText("Встреча успешно забронирована на " + addToDate()));
+        $(".notification .notification__content").shouldBe(visible, Duration.ofSeconds(15)).shouldBe(exactText("Встреча успешно забронирована на " + formatPlus(4)));
         $(withText("Успешно!")).shouldBe(visible);
     }
 
     @Test // Не заполненное поле городом
     public void spaceInput() throws InterruptedException {
-        $("[data-test-id='date'] input").setValue(addToDate());
+        $("[data-test-id='date'] input").setValue(formatPlus(4));
         $("[data-test-id='name'] input").setValue("Киндер Ям");
         $("[data-test-id='phone'] input").setValue("+79499999944");
         $("[data-test-id='agreement']").click();
@@ -150,7 +149,7 @@ public class CardDeliveryOrderSelenideTest {
     @Test // Дата доставки менее 3-х дней
     public void dateMin3Days() throws InterruptedException {
         $("[data-test-id='city'] input").setValue("Горно-Алтайск");
-        $("[data-test-id='date'] input").setValue("07.11.2024");
+        $("[data-test-id='date'] input").setValue(formatPlus(1));
         $("[data-test-id='name'] input").setValue("Ким Йан");
         $("[data-test-id='phone'] input").setValue("+79499999944");
         $("[data-test-id='agreement']").click();
@@ -163,7 +162,7 @@ public class CardDeliveryOrderSelenideTest {
     @Test // Валидация поля Фамилии с именем содержащее букву ё
     public void letterEName() throws InterruptedException {
         $("[data-test-id='city'] input").setValue("Горно-Алтайск");
-        $("[data-test-id='date'] input").setValue(addToDate());
+        $("[data-test-id='date'] input").setValue(formatPlus(4));
         $("[data-test-id='name'] input").setValue("Ёжкин Сергей");
         $("[data-test-id='phone'] input").setValue("+79499999944");
         $("[data-test-id='agreement']").click();
@@ -175,19 +174,19 @@ public class CardDeliveryOrderSelenideTest {
     @Test // Фамилия содержащая в себе дефиса
     public void hyphen() throws InterruptedException {
         $("[data-test-id='city'] input").setValue("Горно-Алтайск");
-        $("[data-test-id='date'] input").setValue(addToDate());
+        $("[data-test-id='date'] input").setValue(formatPlus(4));
         $("[data-test-id='name'] input").setValue("Кин Йян-Сергей");
         $("[data-test-id='phone'] input").setValue("+79499999944");
         $("[data-test-id='agreement']").click();
         $(".button").click();
-        $(".notification .notification__content").shouldBe(visible, Duration.ofSeconds(15)).shouldBe(exactText("Встреча успешно забронирована на " + addToDate()));
+        $(".notification .notification__content").shouldBe(visible, Duration.ofSeconds(15)).shouldBe(exactText("Встреча успешно забронирована на " + formatPlus(4)));
         $(withText("Успешно!")).shouldBe(visible);
     }
 
     @Test // Ввод фамилии на кириллице
     public void сyrillic() throws InterruptedException {
         $("[data-test-id='city'] input").setValue("Горно-Алтайск");
-        $("[data-test-id='date'] input").setValue(addToDate());
+        $("[data-test-id='date'] input").setValue(formatPlus(4));
         $("[data-test-id='name'] input").setValue("Vavilova Nastya");
         $("[data-test-id='phone'] input").setValue("+79499999944");
         $("[data-test-id='agreement']").click();
@@ -198,7 +197,7 @@ public class CardDeliveryOrderSelenideTest {
     @Test // Ввод фамилии со спецсимволами.
     public void specialСharacters() throws InterruptedException {
         $("[data-test-id='city'] input").setValue("Горно-Алтайск");
-        $("[data-test-id='date'] input").setValue(addToDate());
+        $("[data-test-id='date'] input").setValue(formatPlus(4));
         $("[data-test-id='name'] input").setValue("Вавилова Настя,");
         $("[data-test-id='phone'] input").setValue("+79499999944");
         $("[data-test-id='agreement']").click();
@@ -209,19 +208,19 @@ public class CardDeliveryOrderSelenideTest {
     @Test //Ввод фамилии с буквой й.
     public void letterThSurname() throws InterruptedException {
         $("[data-test-id='city'] input").setValue("Горно-Алтайск");
-        $("[data-test-id='date'] input").setValue(addToDate());
+        $("[data-test-id='date'] input").setValue(formatPlus(4));
         $("[data-test-id='name'] input").setValue("Кин Йян");
         $("[data-test-id='phone'] input").setValue("+79499999944");
         $("[data-test-id='agreement']").click();
         $(".button").click();
-        $(".notification .notification__content").shouldBe(visible, Duration.ofSeconds(15)).shouldBe(exactText("Встреча успешно забронирована на " + addToDate()));
+        $(".notification .notification__content").shouldBe(visible, Duration.ofSeconds(15)).shouldBe(exactText("Встреча успешно забронирована на " + formatPlus(4)));
         $(withText("Успешно!")).shouldBe(visible);
     }
 
     @Test  // Не заполнено поле Фамилии
     public void nullSurname() throws InterruptedException {
         $("[data-test-id='city'] input").setValue("Горно-Алтайск");
-        $("[data-test-id='date'] input").setValue(addToDate());
+        $("[data-test-id='date'] input").setValue(formatPlus(4));
         $("[data-test-id='phone'] input").setValue("+79499999944");
         $("[data-test-id='agreement']").click();
         $(".button").click();
@@ -233,7 +232,7 @@ public class CardDeliveryOrderSelenideTest {
     @Test // Отправка заявки с номером начинающимся с цифры 8.
     public void number8() throws InterruptedException {
         $("[data-test-id='city'] input").setValue("Горно-Алтайск");
-        $("[data-test-id='date'] input").setValue(addToDate());
+        $("[data-test-id='date'] input").setValue(formatPlus(4));
         $("[data-test-id='name'] input").setValue("Кин Йян");
         $("[data-test-id='phone'] input").setValue("89499999944");
         $("[data-test-id='agreement']").click();
@@ -244,7 +243,7 @@ public class CardDeliveryOrderSelenideTest {
     @Test // Отправка заявки с номером начинающимся с цифры 7
     public void number7() throws InterruptedException {
         $("[data-test-id='city'] input").setValue("Горно-Алтайск");
-        $("[data-test-id='date'] input").setValue(addToDate());
+        $("[data-test-id='date'] input").setValue(formatPlus(4));
         $("[data-test-id='name'] input").setValue("Кин Йян");
         $("[data-test-id='phone'] input").setValue("79499999944");
         $("[data-test-id='agreement']").click();
@@ -255,7 +254,7 @@ public class CardDeliveryOrderSelenideTest {
     @Test // Отправка заявки с номером более 11 цифр
     public void number12() throws InterruptedException {
         $("[data-test-id='city'] input").setValue("Горно-Алтайск");
-        $("[data-test-id='date'] input").setValue(addToDate());
+        $("[data-test-id='date'] input").setValue(formatPlus(4));
         $("[data-test-id='name'] input").setValue("Кин Йян");
         $("[data-test-id='phone'] input").setValue("+7949999994674");
         $("[data-test-id='agreement']").click();
@@ -266,7 +265,7 @@ public class CardDeliveryOrderSelenideTest {
     @Test // Отправка заявки с номером состоящим из менее 11 цифр.
     public void number6() throws InterruptedException {
         $("[data-test-id='city'] input").setValue("Горно-Алтайск");
-        $("[data-test-id='date'] input").setValue(addToDate());
+        $("[data-test-id='date'] input").setValue(formatPlus(4));
         $("[data-test-id='name'] input").setValue("Кин Йян");
         $("[data-test-id='phone'] input").setValue("+7949999674");
         $("[data-test-id='agreement']").click();
@@ -277,7 +276,7 @@ public class CardDeliveryOrderSelenideTest {
     @Test // Незаполненно поле телефона
     public void nullNumber() throws InterruptedException {
         $("[data-test-id='city'] input").setValue("Горно-Алтайск");
-        $("[data-test-id='date'] input").setValue(addToDate());
+        $("[data-test-id='date'] input").setValue(formatPlus(4));
         $("[data-test-id='name'] input").setValue("Кин Йян");
         $("[data-test-id='agreement']").click();
         $(".button").click();
@@ -287,7 +286,7 @@ public class CardDeliveryOrderSelenideTest {
     @Test // Отправка формы с незаполненным чек боксом
     public void nullCheckbox() throws InterruptedException {
         $("[data-test-id='city'] input").setValue("Горно-Алтайск");
-        $("[data-test-id='date'] input").setValue(addToDate());
+        $("[data-test-id='date'] input").setValue(formatPlus(4));
         $("[data-test-id='name'] input").setValue("Кин Йян");
         $("[data-test-id='phone'] input").setValue("+79499996744");
         $(".button").click();
@@ -299,12 +298,12 @@ public class CardDeliveryOrderSelenideTest {
     @Test // Время ожидания меньше 15 секунд
     public void timeOut() throws InterruptedException {
         $("[data-test-id='city'] input").setValue("Нижний Новгород");
-        $("[data-test-id='date'] input").setValue(addToDate());
+        $("[data-test-id='date'] input").setValue(formatPlus(4));
         $("[data-test-id='name'] input").setValue("Кин Йян");
         $("[data-test-id='phone'] input").setValue("+79499999944");
         $("[data-test-id='agreement']").click();
         $(".button").click();
-        $(".notification .notification__content").shouldBe(visible, Duration.ofSeconds(10)).shouldBe(exactText("Встреча успешно забронирована на " + addToDate()));
+        $(".notification .notification__content").shouldBe(visible, Duration.ofSeconds(10)).shouldBe(exactText("Встреча успешно забронирована на " + formatPlus(4)));
         $(withText("Успешно!")).shouldBe(visible);
     }
 }
