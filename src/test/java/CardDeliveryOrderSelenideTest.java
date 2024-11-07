@@ -29,7 +29,7 @@ public class CardDeliveryOrderSelenideTest {
         $("[data-test-id='date'] input").sendKeys("DELETE");
 
     }
-   LocalDate today = LocalDate.now();
+
    public String formatPlus(long day) {
         LocalDate today = LocalDate.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
