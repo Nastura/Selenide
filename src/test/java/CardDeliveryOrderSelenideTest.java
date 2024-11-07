@@ -30,15 +30,13 @@ public class CardDeliveryOrderSelenideTest {
 
     }
 
-    Data data = new Data(4, 1);
+    Data data = new Data();
+    LocalDate today = LocalDate.now();
 
     public String addToDate() {
-        return data.formatPlus();
+        return data.formatPlus(5);
     }
 
-    public String subtractFromDate() { // вычесть из даты
-        return data.formatMinus();
-    }
 
     // >>>>>>>>>>>>ФУНКЦИОНАЛЬНАЯ ОТПРАВКА ФОРМЫ<<<<<<<<<<<<
 
@@ -152,7 +150,7 @@ public class CardDeliveryOrderSelenideTest {
     @Test // Дата доставки менее 3-х дней
     public void dateMin3Days() throws InterruptedException {
         $("[data-test-id='city'] input").setValue("Горно-Алтайск");
-        $("[data-test-id='date'] input").setValue(subtractFromDate());
+        $("[data-test-id='date'] input").setValue("07.11.2024");
         $("[data-test-id='name'] input").setValue("Ким Йан");
         $("[data-test-id='phone'] input").setValue("+79499999944");
         $("[data-test-id='agreement']").click();
